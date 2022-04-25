@@ -12,7 +12,7 @@ clipper = ClippingWindow(10, 150, 10, 100)
 def key_pressed(key, *args):
     global start_point, end_point
     if key == b'c':
-        start_point, end_point = clipper.cohen_sutherland_clip(start_point, end_point)
+        start_point, end_point = clipper.liam_barsky_clip(start_point, end_point)
 
 
 def clearScreen():
@@ -54,7 +54,7 @@ def plot_lines():
 if __name__ == "__main__":
     glutInit()
     glutInitDisplayMode(GLUT_RGB)
-    glutCreateWindow("Cohen Sutherland Line Clipping")
+    glutCreateWindow("Liam Barsky Line Clipping")
     glutInitWindowSize(500, 500)
     glutInitWindowPosition(50, 50)
     glutDisplayFunc(plot_lines)
