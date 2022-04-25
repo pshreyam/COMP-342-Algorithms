@@ -30,13 +30,13 @@ class ClippingWindow:
         rc_all_zero_end = all(x==0 for x in rc_end)
 
         if rc_all_zero_start and rc_all_zero_end:
-            # The line is accepted!
+            # The line is trivially accepted!
             return start, end
 
         result_anding_codes = [x & y for x, y in zip(rc_start, rc_end)]
 
         if not all(x==0 for x in result_anding_codes):
-            # The line is rejected!
+            # The line is trivially rejected!
             return False
 
         m = (y2 - y1) / (x2 - x1)
@@ -75,6 +75,13 @@ class ClippingWindow:
         p = [-dx, dx, -dy, dy]
         q = [x1 - self.xw_min, self.xw_max - x1, y1 - self.yw_min, self.yw_max - y1]
 
+        p_zero = [True if x==0 else False for x in p]
+        q_negative = [True if x<0 else False for x in q]
+
+        if any(x & y for x, y in zip(p_zero, q_negative)):
+            # The line is trivially rejected!
+            return False
+
         r = [y/x for x, y in zip(p, q)]
 
         negative_p = [True if x < 0 else False for x in p]
@@ -91,4 +98,9 @@ class ClippingWindow:
         u1 = max(max_r)
         u2 = min(min_r)
 
+        if u1 > u2:
+            # The line is rejected!
+            return False
+
+        # The line is accepted!
         return [x1 + u1*dx, y1 + u1*dy], [x1 + u2*dx, y1 + u2*dy]
