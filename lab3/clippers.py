@@ -65,7 +65,7 @@ class ClippingWindow:
             x = int(x1 + (y - y1) / m)
             return self.cohen_sutherland_clip([x, y], other_point)
 
-    def liam_barsky_clip(self, start, end):
+    def liang_barsky_clip(self, start, end):
         x1, y1 = start
         x2, y2 = end
 
@@ -104,3 +104,8 @@ class ClippingWindow:
 
         # The line is accepted!
         return [x1 + u1*dx, y1 + u1*dy], [x1 + u2*dx, y1 + u2*dy]
+
+    def sutherland_hodgeman_clip(self, vertices):
+        for vertex in vertices:
+            print(vertex)
+        return vertices

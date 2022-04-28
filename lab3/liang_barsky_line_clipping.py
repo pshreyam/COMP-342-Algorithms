@@ -5,8 +5,8 @@ from OpenGL.GLU import *
 from clippers import ClippingWindow
 
 
-# start_point, end_point = [0, 120], [130, 5]
-start_point, end_point = [200, 220], [230, 205]
+start_point, end_point = [0, 120], [130, 5]
+# start_point, end_point = [200, 220], [230, 205]
 clipper = ClippingWindow(10, 150, 10, 100)
 
 
