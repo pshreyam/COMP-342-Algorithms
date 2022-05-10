@@ -5,7 +5,9 @@ from OpenGL.GLU import *
 from clippers import ClippingWindow
 
 
-start_point, end_point = [0, 120], [130, 5]
+start_point, end_point = [0, 5], [130, 120]
+start_point, end_point = [0, 35], [170, 35]
+start_point, end_point = [30, -10], [30, 300]
 # start_point, end_point = [200, 220], [230, 205]
 clipper = ClippingWindow(10, 150, 10, 100)
 
@@ -13,7 +15,7 @@ clipper = ClippingWindow(10, 150, 10, 100)
 def key_pressed(key, *args):
     global start_point, end_point
     if key == b'c':
-        result = clipper.liam_barsky_clip(start_point, end_point)
+        result = clipper.liang_barsky_clip(start_point, end_point)
         if result:
             start_point, end_point = result
         else:

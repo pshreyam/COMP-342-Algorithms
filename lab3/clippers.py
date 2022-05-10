@@ -1,3 +1,6 @@
+import sys
+
+
 class ClippingWindow:
     def __init__(self, xw_min, xw_max, yw_min, yw_max):
         self.xw_min = xw_min
@@ -105,7 +108,51 @@ class ClippingWindow:
         # The line is accepted!
         return [x1 + u1*dx, y1 + u1*dy], [x1 + u2*dx, y1 + u2*dy]
 
+    def vertex_inside(self, vertex, clipper):
+        x, y = vertex
+        if clipper == "T":
+            return y <= self.yw_max
+        elif clipper == "B":
+            return y >= self.yw_min
+        elif clipper == "R":
+            return x <= self.xw_max
+        elif clipper == "L":
+            return x >= self.xw_min
+
+    def find_intersection(self, start, end, clipper):
+        x1, y1 = start
+        x2, y2 = end
+
+        dy = y2 - y1
+        dx = x2 - x1
+
+        m = dy/dx if dx != 0 else sys.maxsize
+
+        if clipper == "T":
+            return round(x1 + (self.yw_max-y1)/m), self.yw_max
+        elif clipper == "B":
+            return round(x1 + (self.yw_min-y1)/m), self.yw_min
+        elif clipper == "R":
+            return self.xw_max, round(y1 + m * (self.xw_max - x1))
+        elif clipper == "L":
+            return self.xw_min, round(y1 + m * (self.xw_min - x1))
+
     def sutherland_hodgeman_clip(self, vertices):
-        for vertex in vertices:
-            print(vertex)
-        return vertices
+        output_vertices = vertices[:]
+
+        for clipper in "TBRL":
+            vertices = output_vertices[:]
+            output_vertices.clear()
+            for i in range(len(vertices)):
+                V1 = vertices[i-1]
+                V2 = vertices[i]
+                if (self.vertex_inside(V1, clipper) and not self.vertex_inside(V2, clipper)) or (not self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper)):
+                    intersection_point = self.find_intersection(V1, V2, clipper)
+                    if self.vertex_inside(V2, clipper) and not self.vertex_inside(V1, clipper):
+                        output_vertices.append(intersection_point)
+                        output_vertices.append(V2)
+                    elif not self.vertex_inside(V2, clipper) and self.vertex_inside(V1, clipper):
+                        output_vertices.append(intersection_point)
+                elif (self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper)) or (self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper)):
+                    output_vertices.append(V2)
+        return output_vertices

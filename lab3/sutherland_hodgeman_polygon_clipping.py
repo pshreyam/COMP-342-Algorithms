@@ -5,19 +5,20 @@ from OpenGL.GLU import *
 from clippers import ClippingWindow
 
 
-start_point, end_point = [0, 120], [130, 5]
-# start_point, end_point = [200, 220], [230, 205]
+vertices = [(-40, 70), (50, 175), (175, 60), (60, -40)]
+# vertices = [(0, 0), (160, 0), (160, 200), (0, 200)]
+# vertices = [(0, 0), (160, 0), (160, 5), (0, 5)]
 clipper = ClippingWindow(10, 150, 10, 100)
 
 
 def key_pressed(key, *args):
-    global start_point, end_point
+    global vertices
     if key == b'c':
-        result = clipper.cohen_sutherland_clip(start_point, end_point)
+        result = clipper.sutherland_hodgeman_clip(vertices)
         if result:
-            start_point, end_point = result
+            vertices = result
         else:
-            print("The line is rejected!")
+            print("The ploygon is rejected!")
 
 
 def clear_screen():
@@ -25,11 +26,11 @@ def clear_screen():
     gluOrtho2D(-500.0, 500.0, -500.0, 500.0)
 
 
-def draw_lines():
+def draw_polygon():
     glColor3f(0.0, 1.0, 0.0)
-    glBegin(GL_LINES)
-    glVertex2f(*start_point)
-    glVertex2f(*end_point)
+    glBegin(GL_POLYGON)
+    for vertex in vertices:
+        glVertex2f(*vertex)
     glEnd()
 
 
@@ -58,8 +59,8 @@ def draw_axes_and_clipping_window():
 def plot():
     glClear(GL_COLOR_BUFFER_BIT)
 
+    draw_polygon()
     draw_axes_and_clipping_window()
-    draw_lines()
 
     glutPostRedisplay()
     glFlush()
@@ -68,7 +69,7 @@ def plot():
 if __name__ == "__main__":
     glutInit()
     glutInitDisplayMode(GLUT_RGB)
-    glutCreateWindow("Cohen Sutherland Line Clipping")
+    glutCreateWindow("Sutherland Hodgeman Polygon Clipping")
     glutInitWindowSize(500, 500)
     glutInitWindowPosition(50, 50)
     glutDisplayFunc(plot)
