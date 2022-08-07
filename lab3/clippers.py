@@ -148,11 +148,11 @@ class ClippingWindow:
                 V2 = vertices[i]
                 if (self.vertex_inside(V1, clipper) and not self.vertex_inside(V2, clipper)) or (not self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper)):
                     intersection_point = self.find_intersection(V1, V2, clipper)
-                    if self.vertex_inside(V2, clipper) and not self.vertex_inside(V1, clipper):
+                    if not self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper):
                         output_vertices.append(intersection_point)
                         output_vertices.append(V2)
                     elif not self.vertex_inside(V2, clipper) and self.vertex_inside(V1, clipper):
                         output_vertices.append(intersection_point)
-                elif (self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper)) or (self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper)):
+                elif self.vertex_inside(V1, clipper) and self.vertex_inside(V2, clipper):
                     output_vertices.append(V2)
         return output_vertices
